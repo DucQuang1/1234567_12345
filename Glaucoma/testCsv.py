@@ -6,7 +6,8 @@ Created on Tue May 19 23:44:20 2015
 """
 
 import csv
-
+from MonitorClass import Monitor
+#monitor = Monitor(100)
 def csv_dict_writer(path, fieldnames, data):
     with open(path, "wb") as out_file:
         writer = csv.DictWriter(out_file, delimiter=',', fieldnames=fieldnames)
@@ -43,5 +44,3 @@ if __name__ == "__main__":
     with open("dict_output.csv") as f_obj:
         csv_dict_reader(f_obj)
         
-        
-
