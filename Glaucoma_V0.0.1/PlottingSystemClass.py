@@ -41,37 +41,37 @@ class PlottingSystem(object):
         
         
 #==============================================================================
-#         self.plt.figure(order)  
-#         self.plt.hist(self.newlist1)
-#         self.plt.title("Iteration {} :Bar Chart for initial MD values".format(iteration))
-#         self.plt.xlabel("MD")
-#         self.plt.ylabel("Number (Counts)")
-#         order = order + 1
-#         self.plt.figure(order)
-#         self.plt.hist(self.newlist)
-#         self.plt.title("Iteration {}: Bar Chart for final MD values".format(iteration))
-#         self.plt.xlabel("MD")
-#         self.plt.ylabel("Number (Counts)")
-#         order = order + 1
-#         self.plt.figure(order)
-#         for i in range(5):
-#             self.plt.plot(SimulationSystem.monitor.IOP_list[i])
-#         self.plt.title("Iteration {}: IOP Progression".format(iteration))
-#         order += 1
-#         self.plt.figure(order)
-#         for i in range(5):
-#             self.plt.plot(SimulationSystem.monitor.MD_list[i])
-#         self.plt.title("Iteration {}: MD Progression".format(iteration))
-#         order += 1
-#         self.plt.figure(order)
-#         self.plt.hist(self.newlist2)
-#         self.plt.title("Iteration {}: QALY distribution".format(iteration))
-#         order += 1
-#         self.plt.figure(order)
-#         self.plt.hist(SimulationSystem.monitor.TotalCost)
-#         self.plt.title("Iteration {}: Distribution of Medical Cost".format(iteration))
-#         order += 1
-#         self.plt.figure(order)
-#         self.plt.hist(self.newlist3)
-#         self.plt.title("Iteration {}: Distribution of Final Medication Type".format(iteration))
+        self.plt.figure(order)  
+        self.plt.hist(self.newlist1)
+        self.plt.title("Iteration {} :Bar Chart for initial MD values".format(iteration))
+        self.plt.xlabel("MD")
+        self.plt.ylabel("Number (Counts)")
+        order = order + 1
+        self.plt.figure(order)
+        self.plt.hist(self.newlist)
+        self.plt.title("Iteration {}: Bar Chart for final MD values".format(iteration))
+        self.plt.xlabel("MD")
+        self.plt.ylabel("Number (Counts)")
+        order = order + 1
+        self.plt.figure(order)
+        for i in range(5):
+            self.plt.plot(SimulationSystem.monitor.IOP_list[i])
+            self.plt.title("Iteration {}: IOP Progression".format(iteration))
+        order += 1
+        self.plt.figure(order)
+        for i in range(5):
+            self.plt.plot(SimulationSystem.monitor.MD_list[i])
+        self.plt.title("Iteration {}: MD Progression".format(iteration))
+        order += 1
+        self.plt.figure(order)
+        self.plt.hist(self.newlist2)
+        self.plt.title("Iteration {}: QALY distribution".format(iteration))
+        order += 1
+        self.plt.figure(order)
+        self.plt.hist(SimulationSystem.monitor.TotalCost)
+        self.plt.title("Iteration {}: Distribution of Medical Cost".format(iteration))
+        order += 1
+        self.plt.figure(order)
+        self.plt.hist(self.newlist3)
+        self.plt.title("Iteration {}: Distribution of Final Medication Type".format(iteration))
 #==============================================================================
