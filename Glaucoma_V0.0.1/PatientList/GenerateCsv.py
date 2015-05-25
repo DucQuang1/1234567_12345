@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
     #print my_list
     path = "Patients_list.csv"
-    for j in range(20):    
+    for j in range(100):    
         
         my_list = []
         for i in range(3000):
