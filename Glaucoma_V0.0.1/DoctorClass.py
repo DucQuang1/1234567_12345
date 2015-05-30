@@ -12,18 +12,15 @@ class Doctor(object):
         self.PatientAttribute = Attribute
         self.params = params
         self.medicalRecords = medicalRecords
+#Main Program instructions 
     def ReturnAllDoctorValues (self):
         self.IOPTargetSetting()
         self.IOPandSideEffectEvaluation()
         self.DoctorModule()
-    def IOPandSideEffectEvaluation(self):
-        if self.medicalRecords['MedicationIntake'] > 10 :
-            self.params['SideEffect'] = 0
-        if self.PatientAttribute['IOP'] > self.PatientAttribute['IOPTarget']:
-            self.medicalRecords['TreatmentOverallStatus'] = 2
-            self.medicalRecords['ContinueTreatment'] = True
-        else:
-            self.medicalRecords['ContinueTreatment'] =False
+        
+        
+        
+#This module is to instruct the treatment block             
     def DoctorModule(self):
         if self.medicalRecords['TreatmentBlock'] == 1: 
             block1 = TreatmentBlock1(self.params,self.medicalRecords)
@@ -38,7 +35,7 @@ class Doctor(object):
             block3.update()
             del block3
         if self.medicalRecords['TreatmentBlock'] > 3:
-            print ('shit')
+            print ('')
         self.medicalRecords['PatientVisits'] = self.medicalRecords['PatientVisits'] +1
     def IOPTargetSetting(self):
         #the doctor module here is only called during VF Tests
@@ -46,7 +43,7 @@ class Doctor(object):
             self.SetCorrectIOPTarget()
             self.medicalRecords['NumberVF'] +=1
         self.params['VFCountdown'] = self.params['VFCountdown'] + self.params['time_next_visit']
-        
+    #Deeper level of meaning     
     def SetCorrectIOPTarget(self):
         if self.params['FirstProgression'] == 1 and self.PatientAttribute['CumulativeMDR'] > 2: 
             self.params['SecondProgression'] =1 
@@ -67,3 +64,11 @@ class Doctor(object):
             self.PatientAttribute['IOPTarget'] = 21.0
             
         self.params['VFCountdown'] = 0
+    def IOPandSideEffectEvaluation(self):
+        if self.medicalRecords['MedicationIntake'] > 10 :
+            self.params['SideEffect'] = 0
+        if self.PatientAttribute['IOP'] > self.PatientAttribute['IOPTarget']:
+            self.medicalRecords['TreatmentOverallStatus'] = 2
+            self.medicalRecords['ContinueTreatment'] = True
+        else:
+            self.medicalRecords['ContinueTreatment'] =False

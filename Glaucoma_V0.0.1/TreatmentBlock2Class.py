@@ -18,7 +18,6 @@ class TreatmentBlock2 (object):
             
         if self.medicalRecords['TreatmentOverallStatus'] == 2 :
             self.medicalRecords['ContinueTreatment'] = False
-            
             if  self.medicalRecords['MedicationIntake'] < 9:
                 self.medicalRecords['TrabeculectomySuccess'] = False
                 self.medicalRecords['TreatmentBlock'] = 3

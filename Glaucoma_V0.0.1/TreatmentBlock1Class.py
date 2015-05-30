@@ -41,8 +41,7 @@ TreatmentTree = node ([ [511,1381] ,1, [10,109] , [1,0,0,0,0] ],
                                node([ [148,559] ,10,[5,17] , [1,1,1,0,1] ]))
                            )
                     )
-CopyTree = node (['tree',[123,123]],node(['tree1',[123,123]]),node(0))
-test = [123,3211,'tree',[123,1223]]
+
 class TreatmentBlock1(object):
     def __init__(self, params,medicalRecords):
         self.params = params
@@ -99,10 +98,12 @@ class TreatmentBlock1(object):
             #This is the only way to get out of the treatment block
             if i == 5 and self.params['FirstProgression'] == 1:
                 self.medicalRecords['TreatmentBlock'] += 1
-                
-                
+                #self.ResetMedicationPath()
+            # Here after every medication indication, patients need to     
             self.medicalRecords['TreatmentOverallStatus'] = 0
             self.medicalRecords['MedicationIntake'] = 0
+            if self.medicalRecords['NumberTrabeculectomy'] > 0:
+                print ("fine")
             #exit the block if i == 5
     def operations(self,tracenode):
         self.params['IOPReduction'] = random.beta(tracenode.value[0][0],tracenode.value[0][1])
@@ -117,3 +118,14 @@ class TreatmentBlock1(object):
             self.params['time_next_visit'] = 3
         else:
             self.params['time_next_visit'] = 6
+    def ResetMedicationPath(self):
+        self.medicalRecords['MedicationPath'][2] = 0
+        self.medicalRecords['MedicationPath'][3] = 0
+        self.medicalRecords['MedicationPath'][4] = 0
+        self.medicalRecords['OnTrabeculectomy'] = False
+        if self.medicalRecords['MedicationPath'][1] ==1 :
+            self.medicalRecords['MedicationPath'][1] = 2
+        elif self.medicalRecords['MedicationPath'][1] ==2 :
+            self.medicalRecords['MedicationPath'][1] == 1
+        else:
+            print('This is very wrong')
