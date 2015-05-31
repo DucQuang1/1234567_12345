@@ -22,14 +22,28 @@ class Patient(object):
                        'SideEffect':0 }
         self.medicalRecords = {'PatientVisits': 0, 'MedicationIntake': 0,'MedicationCombination':[0,0,0,0,0],
                                'MedicationAmount': [0,0,0,0,0],'CurrentMedicationType':0,'TreatmentOverallStatus': 0,
-                               'TreatmentBlock':1, 'MedicationPath': [0,0,0,0,0],'ContinueTreatment':True,
-                               'NumberVF':0,
+                               'TreatmentBlock': 'A', 'MedicationPath': [0,0,0,0,0],'ContinueTreatment':True,
+                               'NumberVF':0, 'ExitCode': False,
                                'NumberTrabeculectomy':0, 'TrabeculectomySuccess': True,
-                               'OnTrabeculectomy': False}
+                               'OnTrabeculectomy': False,
+                               'ImplantSuccess': True, 
+                               'OnImplant':False}
         self.CostAttribute = {'QALY': 0, 'TotalCost': 0, 'Below-15': 0, 'ProductiveLoss':0}
         #initiallist.append(copy.deepcopy(self.Attribute))
         monitor.UpdateInitial(self.Attribute)
         self.action = env.process(self.runSimulation())
+    def  runSimulation (self):
+        while True:
+            doctor = Doctor(self.Attribute,self.params,self.medicalRecords)
+            doctor.ReturnAllDoctorValues()
+            self.inCurredSideEffect(doctor)
+            self.monitor.CumulativeCostfromMD(self.name,self.Attribute['MD'],self.Attribute['Age'],self.params['time_next_visit'])
+            yield self.env.timeout(self.params['time_next_visit'])
+            self.params_update()
+            #onelist[self.name].append(self.Attribute['IOPTarget'])
+            self.monitor.UpdateIOPlist(self.name,self.Attribute)
+            self.monitor.UpdateMDlist(self.name,self.Attribute)
+            del doctor
     def params_update(self):
         if self.Attribute['IOP'] > 13:
             difference = self.Attribute['MDR'] *(1.13**(self.Attribute['IOP'] - 15.5))*(self.params['time_next_visit'])
@@ -43,8 +57,29 @@ class Patient(object):
             self.onNoMedicationOrTrabeculectomy()
         if self.medicalRecords['ContinueTreatment'] == True and self.medicalRecords['TreatmentBlock'] <> 0:
             self.onMedication()
-        if self.medicalRecords['CurrentMedicationType'] == 10 or self.medicalRecords['CurrentMedicationType'] == 5 and self.params['IOPReduction'] > 0:
+        if self.medicalRecords['CurrentMedicationType'] == 5 and self.params['IOPReduction'] > 0:
             self.params['IOPReduction'] -= self.params['IOPReduction']*(self.params['time_next_visit']/12)
+    
+    def onNoMedicationOrTrabeculectomy(self):
+        self.params['SideEffect'] = 0
+            #IOP is supposed to increase 0.5% annually, without medication
+        if  self.medicalRecords['OnTrabeculectomy'] == True or self.medicalRecords['OnImplant'] == True:
+            self.Attribute['IOP'] = self.Attribute['IOP'] *(1 + (1.5/100)*(self.params['time_next_visit']/12))
+        else:
+            self.Attribute['IOP'] = self.Attribute['IOP'] *(1 + (0.5/100)*(self.params['time_next_visit']/12))
+        self.medicalRecords['MedicationIntake'] += 1 
+    def onMedication(self):
+        self.medicalRecords['MedicationIntake'] += 1 
+        self.Attribute['IOP'] = self.Attribute['IOP'] *(1-self.params['IOPReduction']*(self.params['time_next_visit']/12))
+        self.UpdateMedicationCombination()
+    def inCurredSideEffect(self,doctor):
+        SideEffect = 0            
+        if random.uniform(0,1) < self.params['SideEffect']:
+            self.medicalRecords['TreatmentOverallStatus'] = 1
+            self.medicalRecords['ContinueTreatment'] = True
+            doctor.DoctorModule() 
+            SideEffect = 1
+        self.CostAttribute['QALY'] += (0.94 - 0.097*SideEffect + 0.015*self.Attribute['MD'] - 0.092*0.4)*(self.params['time_next_visit']/12)
     def UpdateMedicationCombination(self):
         if self.medicalRecords['MedicationCombination'][0] == 1:
             self.monitor.Medication1Update(self.name,self.params['time_next_visit'])
@@ -56,34 +91,3 @@ class Patient(object):
             self.monitor.Medication3Update(self.name,self.params['time_next_visit'])
         if self.medicalRecords['MedicationCombination'][4] == 1:
             self.monitor.Medication5Update(self.name,self.params['time_next_visit'])
-    def onNoMedicationOrTrabeculectomy(self):
-        self.params['SideEffect'] = 0
-            #IOP is supposed to increase 0.5% annually, without medication
-        if  self.medicalRecords['OnTrabeculectomy'] == True:
-            self.Attribute['IOP'] = self.Attribute['IOP'] *(1 + (1/100)*(self.params['time_next_visit']/12))
-        else:
-            self.Attribute['IOP'] = self.Attribute['IOP'] *(1 + (0.5/100)*(self.params['time_next_visit']/12))
-    def onMedication(self):
-        self.medicalRecords['MedicationIntake'] = self.medicalRecords['MedicationIntake'] +1 
-        self.Attribute['IOP'] = self.Attribute['IOP'] *(1-self.params['IOPReduction']*(self.params['time_next_visit']/12))
-        self.UpdateMedicationCombination()
-    def inCurredSideEffect(self,doctor):
-        SideEffect = 0            
-        if random.uniform(0,1) < self.params['SideEffect']:
-            self.medicalRecords['TreatmentOverallStatus'] = 1
-            self.medicalRecords['ContinueTreatment'] = True
-            doctor.DoctorModule() 
-            SideEffect = 1
-        self.CostAttribute['QALY'] += (0.94 - 0.097*SideEffect + 0.015*self.Attribute['MD'] - 0.092*0.4)*(self.params['time_next_visit']/12)
-    def  runSimulation (self):
-        while True:
-            doctor = Doctor(self.Attribute,self.params,self.medicalRecords)
-            doctor.ReturnAllDoctorValues()
-            self.inCurredSideEffect(doctor)
-            self.monitor.CumulativeCostfromMD(self.name,self.Attribute['MD'],self.Attribute['Age'],self.params['time_next_visit'])
-            yield self.env.timeout(self.params['time_next_visit'])
-            self.params_update()
-            #onelist[self.name].append(self.Attribute['IOPTarget'])
-            self.monitor.UpdateIOPlist(self.name,self.Attribute)
-            self.monitor.UpdateMDlist(self.name,self.Attribute)
-            del doctor

@@ -4,7 +4,7 @@ Created on Sat May 16 18:03:03 2015
 
 @author: Martin Nguyen
 """
-TimeToVFTest = 23
+TimeToVFTest = 11
 from TreatmentBlock1Class import TreatmentBlock1
 from TreatmentBlock2Class import TreatmentBlock2
 class Doctor(object):

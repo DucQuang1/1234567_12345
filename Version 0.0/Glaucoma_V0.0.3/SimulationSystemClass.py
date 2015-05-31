@@ -43,6 +43,6 @@ class SimulationSystem(object):
         
         for i in range(self.size):
             self.patientlist.append( Patient(env,i,self.monitor,{'IOP':self.list_IOP[i],'MD': self.list_MD[i],'MDR':self.list_MDR[i],'CumulativeMDR': 0,'IOPTarget': 24,'Age':self.list_Age[i], 'TrabeculectomyIOP': 0}))
-        env.run(until = 600)
+        env.run(until = 200)
         self.final_cost_calculate ()
 

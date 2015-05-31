@@ -11,19 +11,12 @@ class TreatmentBlock2 (object):
         self.params = params
         self.medicalRecords = medicalRecords
     def update(self):
-        if self.medicalRecords['NumberTrabeculectomy'] == 0:
+        if self.medicalRecords['OnTrabeculectomy'] == False:
             self.SurgeryTE()
         else:
             self.SetNumberofVisits()
             
-        if self.medicalRecords['TreatmentOverallStatus'] == 2 :
-            self.medicalRecords['ContinueTreatment'] = False
-            
-            if  self.medicalRecords['MedicationIntake'] < 9:
-                self.medicalRecords['TrabeculectomySuccess'] = False
-                self.medicalRecords['TreatmentBlock'] = 3
-            else:
-                self.medicalRecords['TreatmentBlock']  = 3
+        self.DeterminetoExitTEblock()
     def SurgeryTE(self):
         #self.Attribute['TrabeculectomyIOP'] = self.Attribute['IOP']
         self.Attribute['IOP'] = random.normal(12.5,0.3)
@@ -44,3 +37,15 @@ class TreatmentBlock2 (object):
             self.params['time_next_visit'] = 1
         else:
             self.params['time_next_visit'] = 6
+    def DeterminetoExitTEblock (self):
+        if self.medicalRecords['TreatmentOverallStatus'] == 2 :
+            #self.medicalRecords['ContinueTreatment'] = False
+            
+            if  self.medicalRecords['MedicationIntake'] < 9:
+                self.medicalRecords['TrabeculectomySuccess'] = False
+                self.medicalRecords['OnTrabeculectomy'] = False
+                self.medicalRecords['ExitCode'] = True
+            else:
+                #self.medicalRecords['TreatmentBlock']  = 3
+                self.medicalRecords['OnTrabeculectomy'] = False
+                self.medicalRecords['ExitCode'] = True

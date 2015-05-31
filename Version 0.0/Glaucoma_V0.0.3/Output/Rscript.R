@@ -1,7 +1,7 @@
-UsualCare = read.csv("MList_Usual_100.csv",header = T)
-Target15 = read.csv("MList_15_100.csv",header = T)
-Month6 = read.csv ("MList_6_100.csv",header = T)
-Month24 = read.csv ("MList_24_100.csv",header = T)
+UsualCare = read.csv("Usual.csv",header = T)
+Target15 = read.csv("15.csv",header = T)
+Month6 = read.csv ("6.csv",header = T)
+Month24 = read.csv ("24.csv",header = T)
 UsualCare$Type = "UsualCare"
 Target15$Type = "Target15"
 Month6$Type = "Month6"

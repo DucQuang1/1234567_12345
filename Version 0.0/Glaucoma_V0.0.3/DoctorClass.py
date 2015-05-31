@@ -4,9 +4,14 @@ Created on Sat May 16 18:03:03 2015
 
 @author: Martin Nguyen
 """
-TimeToVFTest = 23
+TimeToVFTest = 11
+FirstProgressionTarget = 21.0
+SecondProgressionTarget = 18.0
+ThirdProgressionTarget = 15.0
 from TreatmentBlock1Class import TreatmentBlock1
 from TreatmentBlock2Class import TreatmentBlock2
+from TreatmentBlock3Class import TreatmentBlock3
+GraphPlan = {'A':['B','E'],'B': ['C'],'C':['D','E'],'D':['E'],'E':['F','G'],'F':['G'],'G':'Terminal'}
 class Doctor(object):
     def __init__(self,Attribute,params,medicalRecords):
         self.PatientAttribute = Attribute
@@ -18,25 +23,14 @@ class Doctor(object):
         self.IOPandSideEffectEvaluation()
         self.DoctorModule()
         
-        
-        
-#This module is to instruct the treatment block             
+
     def DoctorModule(self):
-        if self.medicalRecords['TreatmentBlock'] == 1: 
-            block1 = TreatmentBlock1(self.params,self.medicalRecords)
-            block1.update()
-            del block1
-        if self.medicalRecords['TreatmentBlock'] == 2:
-            block2 = TreatmentBlock2(self.PatientAttribute,self.params,self.medicalRecords)
-            block2.update()
-            del block2
-        if self.medicalRecords['TreatmentBlock'] == 3:
-            block3 = TreatmentBlock1(self.params,self.medicalRecords)
-            block3.update()
-            del block3
-#        if self.medicalRecords['TreatmentBlock'] > 3:
-#            print ('')
-        self.medicalRecords['PatientVisits'] = self.medicalRecords['PatientVisits'] +1
+        self.InitializeCorrectTreatment()
+        if self.medicalRecords['ExitCode'] == True:
+            self.ChangeTreatmentPlan()
+            self.InitializeCorrectTreatment()
+            self.medicalRecords['ExitCode'] = False
+        self.medicalRecords['PatientVisits'] += 1 
     def IOPTargetSetting(self):
         #the doctor module here is only called during VF Tests
         if self.params['VFCountdown'] > TimeToVFTest: 
@@ -50,18 +44,18 @@ class Doctor(object):
             self.PatientAttribute['CumulativeMDR'] = 0
         elif self.PatientAttribute['CumulativeMDR'] > 2:
             self.params['FirstProgression'] = 1
-            self.params['SecondProgression'] =0
+#            self.params['SecondProgression'] =0
             self.PatientAttribute['CumulativeMDR'] = 0
-        else:
-            self.params['FirstProgression'] = 0
-            self.params['SecondProgression'] = 0
+#        else:
+#            self.params['FirstProgression'] = 0
+#            self.params['SecondProgression'] = 0
         
         if self.params['FirstProgression'] == 1 and self.params['SecondProgression']  == 1:
-            self.PatientAttribute['IOPTarget'] = 15.0
+            self.PatientAttribute['IOPTarget'] = ThirdProgressionTarget
         elif self.params['FirstProgression'] == 1:
-            self.PatientAttribute['IOPTarget'] = 18.0
+            self.PatientAttribute['IOPTarget'] = SecondProgressionTarget
         else:
-            self.PatientAttribute['IOPTarget'] = 21.0
+            self.PatientAttribute['IOPTarget'] = FirstProgressionTarget
             
         self.params['VFCountdown'] = 0
     def IOPandSideEffectEvaluation(self):
@@ -72,3 +66,47 @@ class Doctor(object):
             self.medicalRecords['ContinueTreatment'] = True
         else:
             self.medicalRecords['ContinueTreatment'] =False
+    def InitializeCorrectTreatment(self):
+        if self.medicalRecords['TreatmentBlock'] == 'A': 
+            block = TreatmentBlock1(self.params,self.medicalRecords)
+            block.update()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'B':
+            block = TreatmentBlock2(self.PatientAttribute,self.params,self.medicalRecords)
+            block.update()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'C':
+            block = TreatmentBlock1(self.params,self.medicalRecords)
+            block.update()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'D':
+            block = TreatmentBlock2(self.PatientAttribute,self.params,self.medicalRecords)
+            block.update()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'E':
+            block = TreatmentBlock1(self.params,self.medicalRecords)
+            block.update()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'F': 
+            block = TreatmentBlock3(self.PatientAttribute,self.params,self.medicalRecords)
+            block.updateImplant()
+            del block
+        elif self.medicalRecords['TreatmentBlock'] == 'G':
+            block = TreatmentBlock1(self.params,self.medicalRecords)
+            block.update()
+            del block
+    def ChangeTreatmentPlan(self):
+        key = self.medicalRecords['TreatmentBlock']
+        if key == 'B' or key == 'D' or key == 'F':
+            self.medicalRecords['TreatmentBlock'] = GraphPlan[key][0]
+        elif key == 'C':
+            if self.medicalRecords['TrabeculectomySuccess'] == True:
+                self.medicalRecords['TreatmentBlock'] = GraphPlan[key][0]
+            else:
+                self.medicalRecords['TreatmentBlock'] = GraphPlan[key][1]
+        else:
+            if self.PatientAttribute['Age'] < 85: 
+                self.medicalRecords['TreatmentBlock'] = GraphPlan[key][0]
+            else:
+                self.medicalRecords['TreatmentBlock'] = GraphPlan[key][1]
+                    

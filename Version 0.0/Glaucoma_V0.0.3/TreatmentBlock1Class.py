@@ -77,7 +77,8 @@ class TreatmentBlock1(object):
             #this would shortcut CurrentMedicationType ==10, so when if-else evaluate below, we sure this is not because
             #the new treatment is
             if  self.medicalRecords['CurrentMedicationType'] == 10 and self.params['FirstProgression'] == 1:
-                self.medicalRecords['TreatmentBlock'] += 1
+                #self.medicalRecords['TreatmentBlock'] += 1
+                self.medicalRecords['ExitCode'] = True
                 self.ResetMedicationPath()
             while i < 5 and self.medicalRecords['MedicationPath'][i] <> 0 and self.medicalRecords['CurrentMedicationType'] <> 10:  
                 #add condition of i in here
@@ -106,7 +107,8 @@ class TreatmentBlock1(object):
             
             #exit the block if i == 5
             if i == 5 and self.params['FirstProgression'] == 1:
-                self.medicalRecords['TreatmentBlock'] += 1
+                #self.medicalRecords['TreatmentBlock'] += 1
+                self.medicalRecords['ExitCode'] = True
                 self.ResetMedicationPath()
             
     def operations(self,tracenode):

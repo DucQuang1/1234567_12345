@@ -74,4 +74,8 @@ class PlottingSystem(object):
         self.plt.figure(order)
         self.plt.hist(self.newlist3)
         self.plt.title("Iteration {}: Distribution of Final Medication Type".format(iteration))
+        del self.newlist[:]
+        del self.newlist1[:]
+        del self.newlist2[:]
+        del self.newlist3[:]
 #==============================================================================

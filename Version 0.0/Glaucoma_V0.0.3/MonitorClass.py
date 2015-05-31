@@ -6,6 +6,15 @@ Created on Wed May 20 16:32:17 2015
 """
 from __future__ import division
 import copy 
+BBlockerPrice = 6.0
+ProstaPrice = 20.20
+CarboPrice = 13.90
+AdrePrice = 14.0
+Retirementhome = 80
+Nursinghome = 130
+Familyhelp = 56
+Homecare = 103
+
 class Monitor(object):
     def __init__(self, size):
         self.size = size

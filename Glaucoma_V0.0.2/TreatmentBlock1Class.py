@@ -108,9 +108,6 @@ class TreatmentBlock1(object):
             if i == 5 and self.params['FirstProgression'] == 1:
                 self.medicalRecords['TreatmentBlock'] += 1
                 self.ResetMedicationPath()
-            if self.medicalRecords['NumberTrabeculectomy'] > 0 :
-                #print self.medicalRecords['MedicationPath']
-                print self.medicalRecords['CurrentMedicationType']
     def operations(self,tracenode):
         self.params['IOPReduction'] = random.beta(tracenode.value[0][0],tracenode.value[0][1])
         self.medicalRecords['CurrentMedicationType'] = tracenode.value[1] 
