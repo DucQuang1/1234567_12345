@@ -18,7 +18,7 @@ class SimulationSystem(object):
         self.list_MDR = []
         self.list_Age = []
         self.patientlist = []
-        self.monitor = Monitor (3000)
+        self.monitor = Monitor (self.size)
     def csv_dict_reader(self,file_obj):
         reader = csv.DictReader(file_obj, delimiter=',')
         for line in reader:
@@ -30,9 +30,9 @@ class SimulationSystem(object):
     def final_cost_calculate(self):
         i = 0
         for obj in self.patientlist:
-            obj.CostAttribute['TotalCost'] += (obj.medicalRecords['NumberTrabeculectomy'] * 1214 + obj.medicalRecords['PatientVisits'] * (6+2+65))
-            obj.CostAttribute['TotalCost'] += (obj.CostAttribute['Below-15']*325 + obj.CostAttribute['ProductiveLoss']*3029)  
-            obj.CostAttribute['TotalCost'] += (obj.medicalRecords['NumberVF'] *150)
+#            obj.CostAttribute['TotalCost'] += (obj.medicalRecords['NumberTrabeculectomy'] * 1214 + obj.medicalRecords['PatientVisits'] * (6+2+65))
+#            obj.CostAttribute['TotalCost'] += (obj.CostAttribute['Below-15']*325 + obj.CostAttribute['ProductiveLoss']*3029)  
+#            obj.CostAttribute['TotalCost'] += (obj.medicalRecords['NumberVF'] *150)
             self.monitor.finalCostPatient(i,obj.medicalRecords['NumberTrabeculectomy'],obj.medicalRecords['PatientVisits'],obj.medicalRecords['NumberVF'])
             i += 1
     def SystemSimulation (self):

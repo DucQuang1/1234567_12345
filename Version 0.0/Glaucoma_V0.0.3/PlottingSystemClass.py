@@ -28,13 +28,13 @@ class PlottingSystem(object):
             sum3 += obj.Attribute['MD']
         for i in SimulationSystem.monitor.TotalCost:
             sum2 += i
-        inner_dict = dict(zip(field_names,[sum1/3000,sum2/3000]))
+        inner_dict = dict(zip(field_names,[sum1/SimulationSystem.size,sum2/SimulationSystem.size]))
         masterList.append(inner_dict)
         
         print ('CURRENT ITERATION: {}'.format(iteration))
-        print ('Average QALY: {}'.format(sum1/3000))
-        print('Average Medical Cost: {}'.format(sum2/3000))
-        print ('Average MD: {}'.format(sum3/3000))
+        print ('Average QALY: {}'.format(sum1/SimulationSystem.size))
+        print('Average Medical Cost: {}'.format(sum2/SimulationSystem.size))
+        print ('Average MD: {}'.format(sum3/SimulationSystem.size))
         print (' ')
         
         
