@@ -8,6 +8,7 @@ TimeToVFTest = 11
 FirstProgressionTarget = 21.0
 SecondProgressionTarget = 18.0
 ThirdProgressionTarget = 15.0
+AgeNottoSurgery = 85
 from TreatmentBlock1Class import TreatmentBlock1
 from TreatmentBlock2Class import TreatmentBlock2
 from TreatmentBlock3Class import TreatmentBlock3
@@ -44,11 +45,8 @@ class Doctor(object):
             self.PatientAttribute['CumulativeMDR'] = 0
         elif self.PatientAttribute['CumulativeMDR'] > 2:
             self.params['FirstProgression'] = 1
-#            self.params['SecondProgression'] =0
             self.PatientAttribute['CumulativeMDR'] = 0
-#        else:
-#            self.params['FirstProgression'] = 0
-#            self.params['SecondProgression'] = 0
+
         
         if self.params['FirstProgression'] == 1 and self.params['SecondProgression']  == 1:
             self.PatientAttribute['IOPTarget'] = ThirdProgressionTarget
@@ -105,7 +103,7 @@ class Doctor(object):
             else:
                 self.medicalRecords['TreatmentBlock'] = GraphPlan[key][1]
         else:
-            if self.PatientAttribute['Age'] < 85: 
+            if self.PatientAttribute['Age'] < AgeNottoSurgery: 
                 self.medicalRecords['TreatmentBlock'] = GraphPlan[key][0]
             else:
                 self.medicalRecords['TreatmentBlock'] = GraphPlan[key][1]
