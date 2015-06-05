@@ -20,7 +20,7 @@ from PlottingSystemClass import PlottingSystem
 from SimulationSystemClass import SimulationSystem
 plottingsystem = PlottingSystem(plt)
 order = 1
-for i in range(1):
+for i in range(30):
     sysSimulation = SimulationSystem(3000,"PatientList/Patients_list_{}.csv".format(i))
     sysSimulation.SystemSimulation()
     plottingsystem.plot(sysSimulation,order,i,masterListforReplications)
