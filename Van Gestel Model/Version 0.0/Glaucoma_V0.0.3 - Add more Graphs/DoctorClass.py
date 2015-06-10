@@ -5,10 +5,11 @@ Created on Sat May 16 18:03:03 2015
 @author: Martin Nguyen
 """
 TimeToVFTest = 11
-FirstProgressionTarget = 15.0
-SecondProgressionTarget = 15.0
+FirstProgressionTarget = 21.0
+SecondProgressionTarget = 18.0
 ThirdProgressionTarget = 15.0
 AgeNottoSurgery = 85
+TimenotSideEffect = 2
 from TreatmentBlock1Class import TreatmentBlock1
 from TreatmentBlock2Class import TreatmentBlock2
 from TreatmentBlock3Class import TreatmentBlock3
@@ -57,7 +58,7 @@ class Doctor(object):
             
         self.params['VFCountdown'] = 0
     def IOPandSideEffectEvaluation(self):
-        if self.medicalRecords['MedicationIntake'] > 10 :
+        if self.medicalRecords['MedicationIntake'] > TimenotSideEffect :
             self.params['SideEffect'] = 0
         if self.PatientAttribute['IOP'] > self.PatientAttribute['IOPTarget']:
             self.medicalRecords['TreatmentOverallStatus'] = 2
